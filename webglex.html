@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=width-device initial-scale-1.0">
+	<link rel="stylesheet" type="text/css" href="css/style2.css">
+	<link rel="stylesheet" type="text/css" href="css/style3.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+</head>
+<body>
+
+		<nav class="navbar navbar-color navbar-expand-md navbar-dark">
+		<a id="lkbluesh" class="navbar-brand" href="index.html">VR|AR</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Mnu" arial-controls=Mnu arial-expanded="false" arial-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse justify-content-md-center" id="Mnu">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a id="lkblue" class="nav-link" href="index.html">Principal <span class="sr-only"></span></a>
+				</li>
+				<li class="nav-item ">
+				<a id="lkblue" class="nav-link" onclick="linc();">Realidad Virtual</a>
+			</li>
+				<li class="navbar-item">
+					<a id="lkblue" class="nav-link" href="Raumentada.html">Realidad Aumentada</a>
+				</li>
+				<li class="nav-item ">
+				<a id="lkblue" class="nav-link" href="webglex.html">WebGL</a>
+			</li>
+			<li class="nav-item ">
+				<a id="lkblue" class="nav-link" href="Nosotros.html">Nosotros</a>
+			</li>
+			</ul>
+			
+		</div>
+			
+		</div>
+		
+	</nav>
+
+	<script type="module">
+
+		import * as THREE from './build/three.module.js';
+		import { RenderPass } from './RenderPass.js';
+		import { UnrealBloomPass } from './UnrealBloomPass.js';
+		import { EffectComposer } from './EffectComposer.js';
+
+		var escenaw, camaraw, rendererw, materialw, meshw, planow, planow2, materialw2, meshw2, i, vertw, ring, sph, materialw3, meshw3, tog, materialw4, meshw4, skbg, composer, renderS, bloomP;
+
+		function ini(){
+
+		escenaw = new THREE.Scene();
+
+		skbg = new THREE.CubeTextureLoader().load([
+
+				'img/skybox_right.png',
+		        'img/skybox_left.png',
+		    	'img/skybox_up.png',
+		    	'img/skybox_down.png',
+		    	'img/skybox_back.png',
+		    	'img/skybox_front.png',
+
+			]);
+
+		escenaw.background = skbg;
+
+		camaraw = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight);
+
+		planow = new THREE.PlaneGeometry(1000, 2000, 50, 130);
+		materialw = new THREE.MeshBasicMaterial({color: 0x8533ff, wireframe: true});
+		meshw = new THREE.Mesh(planow, materialw);
+
+		planow2 = new THREE.PlaneGeometry(1000, 2000, 32, 32);
+		materialw2 = new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true});
+		meshw2 = new THREE.Mesh(planow2, materialw2);
+
+		sph = new THREE.SphereGeometry(40, 40, 40);
+		materialw3 = new THREE.MeshBasicMaterial({color: 0xee1122});
+		meshw3 = new THREE.Mesh(sph, materialw3);
+
+		tog = new THREE.TorusKnotGeometry(50, 10, 50, 10);
+		materialw4 = new THREE.MeshBasicMaterial({wireframe: true});
+		meshw4 = new THREE.Mesh(tog, materialw4);
+
+		planow.rotateX(Math.PI/2);
+		planow2.rotateX(Math.PI/2);
+
+		meshw2.position.y = 200;
+		meshw3.position.y = 100;
+		meshw3.position.z = 0;
+		meshw4.position.y = 100;
+
+		escenaw.add(meshw);
+		escenaw.add(meshw2);
+		escenaw.add(meshw3);
+		escenaw.add(meshw4);
+
+		rendererw = new THREE.WebGLRenderer();
+		rendererw.setSize(window.innerWidth, window.innerHeight);
+
+		camaraw.position.z = -400;
+		camaraw.position.y = 50;
+
+		renderS = new RenderPass(escenaw, camaraw);
+		bloomP = new UnrealBloomPass( new THREE.Vector2(window.innerWidth, window.innerHeight), 1.6, 1.2, 0.75);
+		composer = new EffectComposer(rendererw);
+		composer.addPass(renderS);
+		composer.addPass(bloomP);
+		
+		document.body.appendChild(rendererw.domElement);
+
+	}
+    
+    function anima(){
+
+    	requestAnimationFrame(anima);
+
+    	var rotSpeed = 0.002; 
+
+    	 var x = camaraw.position.x,
+    	 y = camaraw.position.y,
+    	 z = camaraw.position.z;
+
+    	 camaraw.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
+    	 camaraw.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
+
+    	 camaraw.lookAt(meshw3.position);
+
+    	 meshw4.rotateX(0.004);
+    	 meshw4.rotateY(0.004);
+
+
+    	renders();
+    }
+
+    function renders(){
+
+    	camaraw.aspec = window.innerWidth/window.innerHeight;
+		camaraw.updateProjectionMatrix()
+		rendererw.setSize(window.innerWidth, window.innerHeight);
+
+    	rendererw.render(escenaw, camaraw);
+    	composer.render();
+
+    }
+
+		ini();
+		anima();
+
+	</script>
+
+	<script>
+
+		function linc(){
+			if(confirm("El dispositivo podría alentarse o detenerse si no se cuenta con una buena señal y/o buena capacidad de hardware. ¿Desea continuar?")){
+				window.open('Rvirtual.html', '_self');
+
+				}else{
+					window.open('webglex.html', '_self');
+			}
+		}
+	</script>
+
+
+<script src="./js/jquery-3.5.1.slim.min.js"></script>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

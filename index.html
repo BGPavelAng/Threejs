@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=width-device initial-scale-1.0">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<title></title>
+</head>
+<body>
+		
+	<nav class="navbar navbar-color navbar-expand-md navbar-dark">
+		<a id="lkbluesh" class="navbar-brand" href="index.html">VR|AR</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Mnu" arial-controls=Mnu arial-expanded="false" arial-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse justify-content-md-center" id="Mnu">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a id="lkblue" class="nav-link" href="index.html">Principal <span class="sr-only"></span></a>
+				</li>
+				<li class="nav-item ">
+				<a id="lkblue" class="nav-link" href="#" onclick="linc();">Realidad Virtual</a>
+			</li>
+				<li class="navbar-item">
+					<a id="lkblue" class="nav-link" href="Raumentada.html">Realidad Aumentada</a>
+				</li>
+				<li class="nav-item ">
+				<a id="lkblue" class="nav-link" href="webglex.html">WebGL</a>
+			</li>
+			<li class="nav-item ">
+				<a id="lkblue" class="nav-link" href="Nosotros.html">Nosotros</a>
+			</li>
+			</ul>
+			
+		</div>
+			
+		</div>
+		
+	</nav>
+
+	<div id="info">
+			<a id="bt" href="index.html">
+				<span></span>
+				<span></span>
+				<span></span>
+				Principal
+			</a>
+
+			<a id="bt" onclick="linc();">
+				<span></span>
+				<span></span>
+				<span></span>
+				Realidad Virtual
+			</a>
+			<a id="bt" href="Raumentada.html">
+				<span></span>
+				<span></span>
+				<span></span>
+				Realidad Aumentada
+			</a>
+			<a id="bt" href="webglex.html">
+				<span></span>
+				<span></span>
+				<span></span>
+				WEBGL
+			</a>
+			<a id="bt" href="Nosotros.html">
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+				Nosotros
+			</a>
+		</div>
+
+
+	<script type="module">
+		
+		import * as THREE from './build/three.module.js';
+		import { Water } from './Water2.js';
+		import { OrbitControls } from './OrbitControls.js';
+
+		var escena, dlight, water, waterGeo, camara, renderone, cont1, cont2, cubo, matone, meshone, control, amlight, reloj, delta;
+
+		var params = {
+			color: '#ffffff',
+			scale: 4,
+			flowX: 1,
+			flowY: 1
+		};
+
+
+		function ini(){
+
+			escena = new THREE.Scene();
+			escena.background = new THREE.Color('black');
+
+			camara = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight);
+
+			camara.position.set(10, 0, 10);
+
+
+			cubo = new THREE.BoxGeometry( 3, 1, 256, 32 );
+			matone = new THREE.MeshNormalMaterial();
+			meshone = new THREE.Mesh(cubo, matone);
+			meshone.scale.set(0.5, 0.5, 0.5);
+
+			escena.add(meshone);
+
+			camara.lookAt(cubo);
+
+			reloj = new THREE.Clock();
+
+			waterGeo = new THREE.PlaneBufferGeometry(40, 40);
+
+
+			water = new Water(waterGeo, {
+				color: params.color,
+				scale: params.scale,
+				flowDirection: new THREE.Vector2(params.flowX, params.flowY),
+				textureWidth: 1024,
+				textureHeight: 1024
+			});
+
+			water.position.y = 1;
+			water.position.x = Math.PI * -0.5;
+			escena.add(water);
+
+			amlight = new THREE.AmbientLight(0xcccccc, 0.4);
+			escena.add(amlight);
+
+			dlight = new THREE.DirectionalLight(0xffffff, 0.6);
+			dlight.position.set(-1, 1, 1);
+			escena.add(dlight);
+
+			
+
+			renderone = new THREE.WebGLRenderer({antialias: true});
+			renderone.setPixelRatio(window.devicePixelRatio);
+			renderone.setSize(window.innerWidth, window.innerHeight);
+
+			control = new OrbitControls(camara, renderone.domElement);
+			control.minDistance = 5;
+			control.maxDistance = 50;
+
+			document.body.appendChild(renderone.domElement);
+
+
+		}
+
+		function anima(){
+
+			requestAnimationFrame(anima);
+			render();
+		}
+
+		function render(){
+
+			delta = reloj.getDelta();
+			meshone.rotation.x += delta;
+			meshone.rotation.y = delta * 0.2;
+			renderone.render(escena, camara);
+
+			camara.aspect = window.innerWidth/window.innerHeight;
+			camara.updateProjectionMatrix();
+
+			renderone.setSize(window.innerWidth, window.innerHeight);
+		}
+
+		ini();
+		anima();
+
+	</script>
+
+	<script>
+
+		function linc(){
+			if(confirm("El dispositivo podría alentarse o detenerse si no se cuenta con una buena señal y/o buena capacidad de hardware. ¿Desea continuar?")){
+				window.open('Rvirtual.html', '_self');
+
+				}else{
+					window.open('index.html', '_self');
+			}
+		}
+	</script>
+
+
+
+	<script src="./js/jquery-3.5.1.slim.min.js"></script>
+<script src="./js/popper.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+
+</body>
+</html>
